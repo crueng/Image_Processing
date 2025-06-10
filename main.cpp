@@ -1,10 +1,12 @@
 #include "View.h"
+#include "Presenter.h"
 #include <QtWidgets/QApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    QApplication a(argc, argv);
-    Image_Processing w;
-    w.show();
-    return a.exec();
+	QApplication a(argc, argv);
+	Image_Processing w;
+	Presenter p(w);
+	w.show();
+	return a.exec();
 }
