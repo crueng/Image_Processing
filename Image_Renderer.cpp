@@ -30,6 +30,7 @@ void Image_Renderer::setVignetteFilter(QImage& img)
 {
 	const QSize size = img.size();
 	const QPoint center(size.width() / 2, size.height() / 2);
+	const int maxDistance = getDistance(center, QPoint(0, 0));
 	for (int y = 0; y < size.height(); y++)
 	{
 		for (int x = 0; x < size.width(); x++)
@@ -50,6 +51,35 @@ void Image_Renderer::setVignetteFilter(QImage& img)
 				clamp(color.red() * std::abs(grayScale - 100) / 100),
 				clamp(color.green() * std::abs(grayScale - 100) / 100),
 				clamp(color.blue() * std::abs(grayScale - 100) / 100)));
+		}
+	}
+}
+
+void Image_Renderer::setColorCorrection(QImage& img)
+{
+	QSize size = img.size();
+	auto red = [](int value, double multiplier)
+		{
+			return clamp(value * multiplier);
+		};
+	auto green = [](int value, double multiplier)
+		{
+			return clamp(value * multiplier);
+		};
+	auto  blue = [](int value, double multiplier)
+		{
+			return clamp(value * multiplier);
+		};
+	for (int y = 0; y < size.height(); y++)
+	{
+		for (int x = 0; x < size.width(); x++)
+		{
+			QPoint p(x, y);
+			QColor color(img.pixelColor(p));
+			img.setPixelColor(p, QColor(
+				red(color.red(), 0.8),
+				green(color.green(), 1.1),
+				blue(color.blue(), 1.1)));
 		}
 	}
 }

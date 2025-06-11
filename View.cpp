@@ -5,23 +5,15 @@ Image_Processing::Image_Processing(QWidget* parent)
 	: QMainWindow(parent)
 {
 	m_ui.setupUi(this);
-	connect(m_ui.Choose_Image_Button, &QPushButton::pressed, this, &Image_Processing::chooseFile);
-	connect(m_ui.BW_Filter, &QPushButton::pressed, this, &Image_Processing::bwFilterEnabled);
-	connect(m_ui.Vignette_Filter, &QPushButton::pressed, this, &Image_Processing::vignetteFilterEnabled);
+	connect(m_ui.openImage, &QAction::triggered, this, &Image_Processing::chooseFileButtonPressed);
+	connect(m_ui.BW_Filter, &QAction::triggered, this, &Image_Processing::bwFilterEnabled);
+	connect(m_ui.Vignette_Filter, &QAction::triggered, this, &Image_Processing::vignetteFilterEnabled);
+	connect(m_ui.Color_Correction, &QAction::triggered, this, &Image_Processing::colorCorrectionEnabled);
+	connect(m_ui.Undo_Button, &QPushButton::pressed, this, &Image_Processing::undoButtonpressed);
 }
 
 Image_Processing::~Image_Processing()
 {}
-
-void Image_Processing::chooseFile()
-{
-	QString path = QFileDialog::getOpenFileName(this, "Choose Image", "", "Bilder (*.png *.jpg *.jpeg)");
-	if (!path.isEmpty())
-	{
-		QPixmap image(path);
-		m_ui.Image_Label->setPixmap(image);
-	}
-}
 
 void Image_Processing::setPixmap(QPixmap px)
 {
@@ -37,4 +29,9 @@ QImage Image_Processing::getImage()
 {
 	QImage img = (m_ui.Image_Label->pixmap())->toImage();
 	return img;
+}
+
+void Image_Processing::setStatusBar(const QString message, int duration)
+{
+	m_ui.statusBar->showMessage(message, duration);
 }
