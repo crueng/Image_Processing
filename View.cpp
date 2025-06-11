@@ -5,18 +5,13 @@ Image_Processing::Image_Processing(QWidget* parent)
 	: QMainWindow(parent)
 {
 	m_ui.setupUi(this);
-	connectPresenter();
+	connect(m_ui.Choose_Image_Button, &QPushButton::pressed, this, &Image_Processing::chooseFile);
+	connect(m_ui.BW_Filter, &QPushButton::pressed, this, &Image_Processing::bwFilterEnabled);
+	connect(m_ui.Vignette_Filter, &QPushButton::pressed, this, &Image_Processing::vignetteFilterEnabled);
 }
 
 Image_Processing::~Image_Processing()
 {}
-
-
-
-void Image_Processing::connectPresenter()
-{
-	connect(m_ui.Choose_Image_Button, &QPushButton::pressed, this, &Image_Processing::chooseFile);
-}
 
 void Image_Processing::chooseFile()
 {
@@ -31,4 +26,15 @@ void Image_Processing::chooseFile()
 void Image_Processing::setPixmap(QPixmap px)
 {
 	m_ui.Image_Label->setPixmap(px);
+}
+
+const QSize Image_Processing::getLabelSize() const
+{
+	return m_ui.Image_Label->size();
+}
+
+QImage Image_Processing::getImage()
+{
+	QImage img = (m_ui.Image_Label->pixmap())->toImage();
+	return img;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+#include "Image_Renderer.h"
 #include "View.h"
 
 class Presenter : public QObject
@@ -7,8 +8,10 @@ class Presenter : public QObject
 	Q_OBJECT
 public:
 	Presenter(Image_Processing &v);
-	~Presenter();
+public slots:
+	void enableBWFilter();
+	void enableVignetteFilter();
 private:
-	void connectView();
 	Image_Processing& m_view;
+	Image_Renderer m_render;
 };
