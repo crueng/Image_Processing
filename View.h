@@ -24,6 +24,11 @@ public:
 
 	//Sets the text and duration of the status bar
 	void setStatusBar(const QString message, int duration);
+
+	//Sets the text of the Image_Path_Line
+	void setImagePathLine(const QString message);
+
+	void createFilter(const QString filterName);
 	
 	signals:
 	void bwFilterEnabled();
@@ -31,6 +36,7 @@ public:
 	void colorCorrectionEnabled();
 	void undoButtonpressed();
 	void chooseFileButtonPressed();
+	void actionTriggered(QString func);
 
 private:
 	Ui::Image_ProcessingClass m_ui;
