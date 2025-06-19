@@ -10,5 +10,5 @@ public:
 	~Image_Filter_BW() override = default;
 
 	void applyFilter(QImage& img) override;
+	void runFilterInThread(QImage& img, int threadSize, int startPosition);
 };
-

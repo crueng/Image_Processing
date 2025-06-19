@@ -1,36 +1,55 @@
 #include "Image_Filter_ColorCorrection.h"
 
-#include <QPoint>
 #include <QColor>
 #include <QSize>
 #include <QImage>
 
 void Image_Filter_ColorCorrection::applyFilter(QImage& img)
 {
+	img.detach();
+	img.convertTo(QImage::Format_RGBA8888);
+
 	QSize size = img.size();
-	auto red = [&](int value, double multiplier)
+	auto redMultiplier = [&](int value, double multiplier)
 		{
 			return clamp(value * multiplier);
 		};
-	auto green = [&](int value, double multiplier)
+	auto greenMultiplier = [&](int value, double multiplier)
 		{
 			return clamp(value * multiplier);
 		};
-	auto  blue = [&](int value, double multiplier)
+	auto  blueMultiplier = [&](int value, double multiplier)
 		{
 			return clamp(value * multiplier);
 		};
-	for (int y = 0; y < size.height(); y++)
+
+	uint32_t* data = reinterpret_cast<uint32_t*>(img.bits());
+
+#pragma omp parallel for
+	for (int64_t i = 0; i < size.height() * size.width(); i++)
 	{
-		for (int x = 0; x < size.width(); x++)
-		{
-			QPoint p(x, y);
-			QColor color(img.pixelColor(p));
-			img.setPixelColor(p, QColor(
-				red(color.red(), 0.8),
-				green(color.green(), 1.1),
-				blue(color.blue(), 1.1)));
-		}
+		uint32_t pixelValue = data[i];
+
+		int alpha = (pixelValue >> 24) & 0xFF;
+		int blue = (pixelValue >> 16) & 0xFF;
+		int green = (pixelValue >> 8) & 0xFF;
+		int red = (pixelValue >> 0) & 0xFF;
+		QColor color(red, green, blue, alpha);
+
+		red = redMultiplier(red, 0.8);
+		green = greenMultiplier(green, 1.1);
+		blue = blueMultiplier(blue, 1.1);
+		QColor newColor(red, green, blue, alpha);
+
+		uint32_t newPixelValue = 0;
+		newPixelValue = newPixelValue | (newColor.alpha() & 0xFF);
+		newPixelValue <<= 8;
+		newPixelValue = newPixelValue | (newColor.blue() & 0xFF);
+		newPixelValue <<= 8;
+		newPixelValue = newPixelValue | (newColor.green() & 0xFF);
+		newPixelValue <<= 8;
+		newPixelValue = newPixelValue | (newColor.red() & 0xFF);
+		data[i] = newPixelValue;
 	}
 }
 
@@ -55,9 +74,9 @@ namespace
 		Starter()
 		{
 			Filter_Factory::instance().m_vec.push_back([]()
-			{
-				return std::make_unique<Image_Filter_ColorCorrection>();
-			});
+				{
+					return std::make_unique<Image_Filter_ColorCorrection>();
+				});
 
 			Filter_Factory::instance().m_type["Color Correction"] = Filter_Factory::instance().m_vec.size() - 1;
 		}

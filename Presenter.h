@@ -12,13 +12,9 @@ public:
 	Presenter(Image_Processing &v);
 	void loadFilter();
 public slots:
-	//void enableBWFilter();
-	//void enableVignetteFilter();
-	//void enableColorCorrection();
 	void handleUndoButton();
 	void handleChooseFile();
 	void handleAction(QString name);
-	void openThread(QString name);
 private:
 	Image_Processing& m_view;
 	Image_Model m_model;

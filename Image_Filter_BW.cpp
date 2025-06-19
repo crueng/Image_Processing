@@ -1,17 +1,69 @@
 #include "Image_Filter_BW.h"
 
+#include <thread>
+
 void Image_Filter_BW::applyFilter(QImage& img)
 {
-	QSize size = img.size();
-	for (int y = 0; y < size.height(); y++)
+	int THREAD_QUANTITY = std::thread::hardware_concurrency();
+	img.detach();
+	img.convertTo(QImage::Format_RGBA8888);
+	std::vector<std::thread> activeThreads;
+	int threadSize = (img.width() * img.height()) / THREAD_QUANTITY;
+	int remaining = (img.width() * img.height()) % THREAD_QUANTITY;
+
+	//Starts all the threads
+	for (int i = 0; i < THREAD_QUANTITY; i++)
 	{
-		for (int x = 0; x < size.width(); x++)
+		int startPosition = threadSize * i;
+		int thisThreadSize = threadSize;
+		if (i == THREAD_QUANTITY - 1)
 		{
-			QColor color = img.pixelColor(x, y);
-			int gray = qGray(color.rgb());
-			img.setPixelColor(x, y, QColor(gray, gray, gray, color.alpha()));
+			thisThreadSize += remaining;
 		}
+		std::thread t([this, &img, thisThreadSize, startPosition]()
+			{
+				runFilterInThread(img, thisThreadSize, startPosition);
+			});
+		activeThreads.push_back(std::move(t));
 	}
+
+	//Waits for all the active threads
+	for (int i = 0; i < activeThreads.size(); i++)
+	{
+		activeThreads[i].join();
+	}
+}
+
+void Image_Filter_BW::runFilterInThread(QImage& img, int threadSize, int startPosition)
+{
+	uint32_t* data = reinterpret_cast<uint32_t*>(img.bits());
+	
+	for (int i = startPosition; i < startPosition + threadSize; i++)
+	{
+		// get the pixel Color
+		uint32_t pixelValue = data[i];
+		int alpha = (pixelValue >> 24) & 0xFF;
+		int blue = (pixelValue >> 16) & 0xFF;
+		int green = (pixelValue >> 8) & 0xFF;
+		int red = (pixelValue >> 0) & 0xFF;
+		QColor color(red, green, blue, alpha);
+
+		// modify the pixel Color
+		int gray = qGray(color.rgb());
+		QColor newColor(gray, gray, gray, color.alpha());
+
+		// write back the new pixel color
+		uint32_t newPixelValue = 0;
+		newPixelValue = newPixelValue | (newColor.alpha() & 0xFF);
+		newPixelValue <<= 8;
+		newPixelValue = newPixelValue | (newColor.blue() & 0xFF);
+		newPixelValue <<= 8;
+		newPixelValue = newPixelValue | (newColor.green() & 0xFF);
+		newPixelValue <<= 8;
+		newPixelValue = newPixelValue | (newColor.red() & 0xFF);
+		data[i] = newPixelValue;
+	}
+
 }
 
 namespace
@@ -22,9 +74,9 @@ namespace
 		Starter()
 		{
 			Filter_Factory::instance().m_vec.push_back([]()
-			{
-				return std::make_unique<Image_Filter_BW>();
-			});
+				{
+					return std::make_unique<Image_Filter_BW>();
+				});
 
 			Filter_Factory::instance().m_type["Black White"] = Filter_Factory::instance().m_vec.size() - 1;
 		}

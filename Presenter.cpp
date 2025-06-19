@@ -1,18 +1,15 @@
 #include "Presenter.h"
-#include "Worker_Thread.h"
 
 #include <QString>
 #include <QImage>
 #include <QFileDialog>
+#include <chrono>
 
 #define STATUS_BAR_DURATION 2000
 
 Presenter::Presenter(Image_Processing& v) : m_view(v)
 {
 	loadFilter();
-	//connect(&m_view, &Image_Processing::bwFilterEnabled, this, &Presenter::enableBWFilter);
-	//connect(&m_view, &Image_Processing::vignetteFilterEnabled, this, &Presenter::enableVignetteFilter);
-	//connect(&m_view, &Image_Processing::colorCorrectionEnabled, this, &Presenter::enableColorCorrection);
 	connect(&m_view, &Image_Processing::actionTriggered, this, &Presenter::handleAction);
 	connect(&m_view, &Image_Processing::undoButtonpressed, this, &Presenter::handleUndoButton);
 	connect(&m_view, &Image_Processing::chooseFileButtonPressed, this, &Presenter::handleChooseFile);
@@ -55,22 +52,14 @@ void Presenter::handleChooseFile()
 
 void Presenter::handleAction(QString name)
 {
-	openThread(name);
-}
-
-void Presenter::openThread(QString name)
-{
 	auto action = Filter_Factory::instance().createFilter(name);
 	QImage img = m_view.getImage();
 	m_model.addImage(img);
-	auto func = [&]()
-	{
-		action->applyFilter(img);
-		return 0;
-	};
-	std::thread t(func);
-	t.join();
+	auto startTime = std::chrono::high_resolution_clock::now();
+	action->applyFilter(img);
+	auto stopTime = std::chrono::high_resolution_clock::now();
+	double resultTime = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime).count();
 	m_view.setPixmap(QPixmap::fromImage(img));
-	QString message = name + " applied";
+	QString message = name + " applied |" + " " + "Time in ms: " + (std::to_string(resultTime)).c_str();
 	m_view.setStatusBar(message, STATUS_BAR_DURATION);
 }
