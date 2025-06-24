@@ -15,6 +15,11 @@ Presenter::Presenter(Image_Processing& v) : m_view(v)
 	connect(&m_view, &Image_Processing::chooseFileButtonPressed, this, &Presenter::handleChooseFile);
 }
 
+Presenter::~Presenter()
+{
+	m_workerThread->join();
+}
+
 void Presenter::loadFilter()
 {
 	for (const auto& [filter, index] : Filter_Factory::instance().m_type)
@@ -52,14 +57,27 @@ void Presenter::handleChooseFile()
 
 void Presenter::handleAction(QString name)
 {
-	auto action = Filter_Factory::instance().createFilter(name);
-	QImage img = m_view.getImage();
-	m_model.addImage(img);
-	auto startTime = std::chrono::high_resolution_clock::now();
-	action->applyFilter(img);
-	auto stopTime = std::chrono::high_resolution_clock::now();
-	double resultTime = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime).count();
-	m_view.setPixmap(QPixmap::fromImage(img));
-	QString message = name + " applied |" + " " + "Time in ms: " + (std::to_string(resultTime)).c_str();
-	m_view.setStatusBar(message, STATUS_BAR_DURATION);
+	auto process = [this, name]()
+		{
+			m_view.enableCancelButton();
+			const auto action = Filter_Factory::instance().createFilter(name);
+			QImage img = m_view.getImage();
+			m_model.addImage(img);
+			const auto startTime = std::chrono::high_resolution_clock::now();
+			action->applyFilter(img);
+			const auto stopTime = std::chrono::high_resolution_clock::now();
+			const double resultTime = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime).count();
+			m_view.setPixmap(QPixmap::fromImage(img));
+			m_view.disableCancelButton();
+			const QString message = name + " applied |" + " " + "Time in ms: " + (std::to_string(resultTime)).c_str();
+			m_view.setStatusBar(message, 2000);
+		};
+	if (m_workerThread != nullptr)
+	{
+		if (m_workerThread->joinable())
+		{
+			m_workerThread->join();
+		}
+	}
+	m_workerThread = std::make_unique<std::thread>(process);
 }

@@ -7,6 +7,7 @@ Image_Processing::Image_Processing(QWidget* parent)
 	m_ui.setupUi(this);
 	QPixmap px;
 	m_ui.Image_Label->setPixmap(px);
+	disableCancelButton();
 	connect(m_ui.openImage, &QAction::triggered, this, &Image_Processing::chooseFileButtonPressed);
 	connect(m_ui.BW_Filter, &QAction::triggered, this, &Image_Processing::bwFilterEnabled);
 	connect(m_ui.Vignette_Filter, &QAction::triggered, this, &Image_Processing::vignetteFilterEnabled);
@@ -50,4 +51,16 @@ void Image_Processing::createFilter(const QString filterName)
 	{
 		emit actionTriggered(filterName);
 	});
+}
+
+void Image_Processing::enableCancelButton() const
+{
+	m_ui.Cancel_Button->setEnabled(true);
+	m_ui.Cancel_Button->show();
+}
+
+void Image_Processing::disableCancelButton() const
+{
+	m_ui.Cancel_Button->setEnabled(false);
+	m_ui.Cancel_Button->hide();
 }

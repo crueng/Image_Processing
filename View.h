@@ -28,7 +28,14 @@ public:
 	//Sets the text of the Image_Path_Line
 	void setImagePathLine(const QString message);
 
+	//Creates a new QAction
 	void createFilter(const QString filterName);
+
+	//Enables the cancel button
+	void enableCancelButton() const;
+
+	//Disables the cancel Button
+	void disableCancelButton() const;
 	
 	signals:
 	void bwFilterEnabled();

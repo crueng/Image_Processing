@@ -4,12 +4,15 @@
 #include "Filter_Factory.h"
 
 #include <QObject>
+#include <memory>
+#include <thread>
 
 class Presenter : public QObject
 {
 	Q_OBJECT
 public:
 	Presenter(Image_Processing &v);
+	~Presenter();
 	void loadFilter();
 public slots:
 	void handleUndoButton();
@@ -18,4 +21,5 @@ public slots:
 private:
 	Image_Processing& m_view;
 	Image_Model m_model;
+	std::unique_ptr<std::thread> m_workerThread;
 };
