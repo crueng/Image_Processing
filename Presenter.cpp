@@ -13,6 +13,7 @@ Presenter::Presenter(Image_Processing& v) : m_view(v)
 	connect(&m_view, &Image_Processing::actionTriggered, this, &Presenter::handleAction);
 	connect(&m_view, &Image_Processing::undoButtonpressed, this, &Presenter::handleUndoButton);
 	connect(&m_view, &Image_Processing::chooseFileButtonPressed, this, &Presenter::handleChooseFile);
+	connect(&m_view, &Image_Processing::cancelButtonPressed, this, &Presenter::handleCancelButton);
 }
 
 Presenter::~Presenter()
@@ -44,10 +45,20 @@ void Presenter::handleChooseFile()
 	QString path = QFileDialog::getOpenFileName(&m_view, "Choose Image", "", "Bilder (*.png *.jpg *.jpeg)");
 	if (!path.isEmpty())
 	{
-		QPixmap image(path);
-		m_view.setPixmap(image);
-		m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
-		m_view.setImagePathLine(path);
+		if (m_workerThread != nullptr)
+		{
+			if (m_workerThread->joinable())
+			{
+				m_workerThread->join();
+			}
+		}
+		m_workerThread = std::make_unique<std::thread>([this, path]()
+			{
+				QPixmap image(path);
+				m_view.setPixmap(image);
+				m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
+				m_view.setImagePathLine(path);
+			});
 	}
 	else
 	{
@@ -80,4 +91,9 @@ void Presenter::handleAction(QString name)
 		}
 	}
 	m_workerThread = std::make_unique<std::thread>(process);
+}
+
+void Presenter::handleCancelButton()
+{
+
 }

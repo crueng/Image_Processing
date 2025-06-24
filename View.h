@@ -43,6 +43,7 @@ public:
 	void colorCorrectionEnabled();
 	void undoButtonpressed();
 	void chooseFileButtonPressed();
+	void cancelButtonPressed();
 	void actionTriggered(QString func);
 
 private:

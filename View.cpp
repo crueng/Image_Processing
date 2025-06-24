@@ -13,6 +13,7 @@ Image_Processing::Image_Processing(QWidget* parent)
 	connect(m_ui.Vignette_Filter, &QAction::triggered, this, &Image_Processing::vignetteFilterEnabled);
 	connect(m_ui.Color_Correction, &QAction::triggered, this, &Image_Processing::colorCorrectionEnabled);
 	connect(m_ui.Undo_Button, &QPushButton::pressed, this, &Image_Processing::undoButtonpressed);
+	connect(m_ui.Cancel_Button, &QPushButton::pressed, this, &Image_Processing::cancelButtonPressed);
 }
 
 Image_Processing::~Image_Processing()
