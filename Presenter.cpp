@@ -4,25 +4,46 @@
 #include <QImage>
 #include <QFileDialog>
 #include <chrono>
+#include <QDebug>
+#include <memory>
+#include <mutex>
 
-#define STATUS_BAR_DURATION 2000
+//#define STATUS_BAR_DURATION 2000
+namespace
+{
+	const int STATUS_BAR_DURATION = 2000;
+}
+
+Q_DECLARE_METATYPE(size_t);
 
 Presenter::Presenter(Image_Processing& v) : m_view(v)
 {
+	qRegisterMetaType<size_t>("size_t");
+
 	loadFilter();
+	//Connects the presenter with the view
 	connect(&m_view, &Image_Processing::actionTriggered, this, &Presenter::handleAction);
 	connect(&m_view, &Image_Processing::undoButtonpressed, this, &Presenter::handleUndoButton);
 	connect(&m_view, &Image_Processing::chooseFileButtonPressed, this, &Presenter::handleChooseFile);
 	connect(&m_view, &Image_Processing::cancelButtonPressed, this, &Presenter::handleCancelButton);
+
+	//Connects the thread
+	connect(this, &Presenter::threadFinished, this, &Presenter::handleFinishedThread, Qt::QueuedConnection);
+	//connect(this, &Presenter::setProgressbarPercentage, this, &Presenter::setProgress, Qt::QueuedConnection);
 }
 
 Presenter::~Presenter()
 {
-	m_workerThread->join();
+	//Waits for the thread to finish
+	if (m_workerThread->joinable())
+	{
+		m_workerThread->join();
+	}
 }
 
 void Presenter::loadFilter()
 {
+	//Initializes the filter in the model and creates QActions in the view 
 	for (const auto& [filter, index] : Filter_Factory::instance().m_type)
 	{
 		m_model.addFilter(filter);
@@ -32,19 +53,23 @@ void Presenter::loadFilter()
 
 void Presenter::handleUndoButton()
 {
+	//If the model is empty show "No Image Selected"
 	if (m_model.empty())
 	{
 		m_view.setImagePathLine("No Image Selected");
 	}
-	m_view.setPixmap(QPixmap::fromImage(m_model.getTop()));
+	//Else set the Pixmap to the last image
+	m_view.setImage(m_model.getTop());
 	m_view.setStatusBar("Undo", STATUS_BAR_DURATION);
 }
 
 void Presenter::handleChooseFile()
 {
+	//Get the path to your Image
 	QString path = QFileDialog::getOpenFileName(&m_view, "Choose Image", "", "Bilder (*.png *.jpg *.jpeg)");
 	if (!path.isEmpty())
 	{
+		//If the workerThread is still running, wait for it
 		if (m_workerThread != nullptr)
 		{
 			if (m_workerThread->joinable())
@@ -52,12 +77,15 @@ void Presenter::handleChooseFile()
 				m_workerThread->join();
 			}
 		}
+		//The workerThread starts to load the image
 		m_workerThread = std::make_unique<std::thread>([this, path]()
 			{
-				QPixmap image(path);
-				m_view.setPixmap(image);
+				QImage image(path);
+				image.convertTo(QImage::Format_RGBA8888);
+				m_view.setImage(image);
 				m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
 				m_view.setImagePathLine(path);
+				m_model.addImage(image);
 			});
 	}
 	else
@@ -68,21 +96,35 @@ void Presenter::handleChooseFile()
 
 void Presenter::handleAction(QString name)
 {
-	auto process = [this, name]()
+	m_token.setToken(Enabled);
+	m_view.enableCancelButton();
+	m_view.setProgressBar(0);
+	m_view.showProgessBar();
+	std::shared_ptr action = Filter_Factory::instance().createFilter(name);
+
+	//Connects the percentage updater
+	connect(action.get(), &Image_Filter::updatePercentage, this, &Presenter::incrementCounter, Qt::QueuedConnection);
+	connect(action.get(), &Image_Filter::changeImage, this, &Presenter::updateImage, Qt::QueuedConnection);
+	/*connect(action.get(), &Image_Filter::updatePercentage, this, [&](size_t percent)
+	{
+		QMetaObject::invokeMethod(&m_view, "setProgressBar", Q_ARG(size_t, percent));
+	});*/
+
+	QImage img = m_view.getImage();
+	auto process = [this, name, action, img = std::move(img)]() mutable
 		{
-			m_view.enableCancelButton();
-			const auto action = Filter_Factory::instance().createFilter(name);
-			QImage img = m_view.getImage();
-			m_model.addImage(img);
+			action->setToken(m_token);
 			const auto startTime = std::chrono::high_resolution_clock::now();
 			action->applyFilter(img);
+			qDebug() << "filter done";
 			const auto stopTime = std::chrono::high_resolution_clock::now();
 			const double resultTime = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime).count();
-			m_view.setPixmap(QPixmap::fromImage(img));
-			m_view.disableCancelButton();
 			const QString message = name + " applied |" + " " + "Time in ms: " + (std::to_string(resultTime)).c_str();
-			m_view.setStatusBar(message, 2000);
+			emit threadFinished(std::move(img), std::move(message));
+			//QMetaObject::invokeMethod(this, "handleFinishedThread", Q_ARG(QImage, img), Q_ARG(QString, message));
 		};
+
+	//If the workerThread is still running, wait for it
 	if (m_workerThread != nullptr)
 	{
 		if (m_workerThread->joinable())
@@ -90,10 +132,37 @@ void Presenter::handleAction(QString name)
 			m_workerThread->join();
 		}
 	}
-	m_workerThread = std::make_unique<std::thread>(process);
+	m_counter = 0;
+	//The workerThread starts to apply the filter
+	m_workerThread = std::make_unique<std::thread>(std::move(process));
+}
+
+void Presenter::handleFinishedThread(QImage img, QString name)
+{
+	m_model.addImage(img);
+	m_view.setImage(img);
+	m_view.disableCancelButton();
+	m_view.setStatusBar(name, STATUS_BAR_DURATION);
+	m_view.hideProgressBar();
+	qDebug() << m_counter;
 }
 
 void Presenter::handleCancelButton()
 {
+	qDebug() << "canceled";
+	m_token.setToken(Disabled);
+}
 
+void Presenter::incrementCounter()
+{
+	QImage img = m_view.getImage();
+	int size = img.width() * img.height();
+	m_counter++;
+	m_progress = std::round((float)m_counter / (float)size * 10000.0f);
+	m_view.setProgressBar(m_progress);
+}
+
+void Presenter::updateImage(QImage img)
+{
+	m_view.setImage(img);
 }

@@ -1,11 +1,25 @@
 #pragma once
-#include <thread>
-#include <memory>
+#include <atomic>
+
+enum
+{
+	Enabled = true,
+	Disabled = false
+};
 
 class ThreadToken
 {
 public:
-	void requestStop();
+	//Constructs the token with default value true
+	ThreadToken();
+	~ThreadToken() = default;
+
+	//Sets the token
+	bool getToken()const;
+
+	//Returns the token
+	void setToken(bool value);
+	
 private:
-	std::unique_ptr<std::thread> m_workerThread;
+	std::atomic<bool> m_token;
 };

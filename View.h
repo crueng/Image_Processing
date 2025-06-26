@@ -14,7 +14,7 @@ public:
 	~Image_Processing();
 
 	//Sets the pixmap on the label
-	void setPixmap(QPixmap px);
+	void setImage(QImage px);
 
 	//returns the labelSize
 	const QSize getLabelSize() const;
@@ -28,14 +28,23 @@ public:
 	//Sets the text of the Image_Path_Line
 	void setImagePathLine(const QString message);
 
+	//Sets the progressBar
+	void setProgressBar(size_t value);
+
 	//Creates a new QAction
 	void createFilter(const QString filterName);
 
 	//Enables the cancel button
 	void enableCancelButton() const;
 
+	//Shows the progressbar
+	void showProgessBar();
+
 	//Disables the cancel Button
 	void disableCancelButton() const;
+
+	//Hides the progressbar
+	void hideProgressBar();
 	
 	signals:
 	void bwFilterEnabled();
@@ -48,4 +57,5 @@ public:
 
 private:
 	Ui::Image_ProcessingClass m_ui;
+	QImage m_original;
 };

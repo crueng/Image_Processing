@@ -14,6 +14,10 @@ void Image_Filter_Vignette::applyFilter(QImage& img)
 #pragma omp parallel for
 	for (int64_t i = 0; i < size.width() * size.height(); i++)
 	{
+		if (!m_token->getToken())
+		{
+			break;
+		}
 		int x = i % size.width();
 		int y = i / size.width();
 
@@ -51,6 +55,11 @@ void Image_Filter_Vignette::applyFilter(QImage& img)
 		newPixelValue = newPixelValue | (newColor.red() & 0xFF);
 		data[i] = newPixelValue;
 	}
+}
+
+void Image_Filter_Vignette::setToken(ThreadToken& token)
+{
+	m_token = &token;
 }
 
 const int Image_Filter_Vignette::clamp(const int value)

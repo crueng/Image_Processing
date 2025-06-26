@@ -28,6 +28,10 @@ void Image_Filter_ColorCorrection::applyFilter(QImage& img)
 #pragma omp parallel for
 	for (int64_t i = 0; i < size.height() * size.width(); i++)
 	{
+		if (!m_token->getToken())
+		{
+			break;
+		}
 		uint32_t pixelValue = data[i];
 
 		int alpha = (pixelValue >> 24) & 0xFF;
@@ -51,6 +55,11 @@ void Image_Filter_ColorCorrection::applyFilter(QImage& img)
 		newPixelValue = newPixelValue | (newColor.red() & 0xFF);
 		data[i] = newPixelValue;
 	}
+}
+
+void Image_Filter_ColorCorrection::setToken(ThreadToken& token)
+{
+	m_token = &token;
 }
 
 const int Image_Filter_ColorCorrection::clamp(const int value)

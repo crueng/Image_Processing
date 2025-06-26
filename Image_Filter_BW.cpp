@@ -1,12 +1,13 @@
 #include "Image_Filter_BW.h"
 
 #include <thread>
+#include <QDebug>
 
 void Image_Filter_BW::applyFilter(QImage& img)
 {
+	
 	int THREAD_QUANTITY = std::thread::hardware_concurrency();
 	img.detach();
-	img.convertTo(QImage::Format_RGBA8888);
 	std::vector<std::thread> activeThreads;
 	int threadSize = (img.width() * img.height()) / THREAD_QUANTITY;
 	int remaining = (img.width() * img.height()) % THREAD_QUANTITY;
@@ -22,6 +23,7 @@ void Image_Filter_BW::applyFilter(QImage& img)
 		}
 		std::thread t([this, &img, thisThreadSize, startPosition]()
 			{
+				qDebug() << "thread started";
 				runFilterInThread(img, thisThreadSize, startPosition);
 			});
 		activeThreads.push_back(std::move(t));
@@ -34,12 +36,29 @@ void Image_Filter_BW::applyFilter(QImage& img)
 	}
 }
 
+void Image_Filter_BW::setToken(ThreadToken& token)
+{
+	m_token = &token;
+}
+
 void Image_Filter_BW::runFilterInThread(QImage& img, int threadSize, int startPosition)
 {
 	uint32_t* data = reinterpret_cast<uint32_t*>(img.bits());
-	
+
+	int counter = 0;
 	for (int i = startPosition; i < startPosition + threadSize; i++)
 	{
+		counter++;
+		if (counter % 10000)
+		{
+			emit updatePercentage();
+		}
+		//emit changeImage(img);
+		if (!m_token->getToken())
+		{
+			qDebug() << "thread done";
+			break;
+		}
 		// get the pixel Color
 		uint32_t pixelValue = data[i];
 		int alpha = (pixelValue >> 24) & 0xFF;
@@ -63,7 +82,6 @@ void Image_Filter_BW::runFilterInThread(QImage& img, int threadSize, int startPo
 		newPixelValue = newPixelValue | (newColor.red() & 0xFF);
 		data[i] = newPixelValue;
 	}
-
 }
 
 namespace

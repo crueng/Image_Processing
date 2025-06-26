@@ -1,6 +1,16 @@
 #include "ThreadToken.h"
 
-void ThreadToken::requestStop()
+ThreadToken::ThreadToken()
 {
-	
+	setToken(true);
+}
+
+bool ThreadToken::getToken() const
+{
+	return m_token.load();
+}
+
+void ThreadToken::setToken(bool value)
+{
+	m_token.store(value);
 }
