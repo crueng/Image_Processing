@@ -8,7 +8,7 @@ Image_Processing::Image_Processing(QWidget* parent)
 	QPixmap px;
 	m_ui.Image_Label->setPixmap(px);
 	m_ui.Image_ProgressBar->setMinimum(0);
-	m_ui.Image_ProgressBar->setMaximum(10000);
+	m_ui.Image_ProgressBar->setMaximum(1000);
 	hideProgressBar();
 	disableCancelButton();
 
@@ -54,9 +54,9 @@ void Image_Processing::setImagePathLine(const QString message)
 
 void Image_Processing::setProgressBar(size_t value)
 {
-	if (value > 10000)
+	if (value > 1000)
 	{
-		value = 10000;
+		value = 1000;
 	}
 	m_ui.Image_ProgressBar->setValue(value);
 	//m_ui.Image_ProgressBar->update();

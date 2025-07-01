@@ -36,7 +36,7 @@ public slots:
 	void handleCancelButton();
 
 	//Increments the counter
-	void incrementCounter();
+	void incrementCounter(int count);
 
 	//updates the image
 	void updateImage(QImage img);

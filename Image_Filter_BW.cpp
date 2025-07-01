@@ -46,12 +46,14 @@ void Image_Filter_BW::runFilterInThread(QImage& img, int threadSize, int startPo
 	uint32_t* data = reinterpret_cast<uint32_t*>(img.bits());
 
 	int counter = 0;
+	int total = img.width() * img.height();
+	int threshold = total / 1000;
 	for (int i = startPosition; i < startPosition + threadSize; i++)
 	{
 		counter++;
-		if (counter % 10000)
+		if (counter % threshold == 0)
 		{
-			emit updatePercentage();
+			emit updatePercentage(threshold);
 		}
 		//emit changeImage(img);
 		if (!m_token->getToken())

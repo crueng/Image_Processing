@@ -8,7 +8,6 @@
 #include <memory>
 #include <mutex>
 
-//#define STATUS_BAR_DURATION 2000
 namespace
 {
 	const int STATUS_BAR_DURATION = 2000;
@@ -85,7 +84,6 @@ void Presenter::handleChooseFile()
 				m_view.setImage(image);
 				m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
 				m_view.setImagePathLine(path);
-				m_model.addImage(image);
 			});
 	}
 	else
@@ -111,6 +109,7 @@ void Presenter::handleAction(QString name)
 	});*/
 
 	QImage img = m_view.getImage();
+	m_model.addImage(img);
 	auto process = [this, name, action, img = std::move(img)]() mutable
 		{
 			action->setToken(m_token);
@@ -139,7 +138,6 @@ void Presenter::handleAction(QString name)
 
 void Presenter::handleFinishedThread(QImage img, QString name)
 {
-	m_model.addImage(img);
 	m_view.setImage(img);
 	m_view.disableCancelButton();
 	m_view.setStatusBar(name, STATUS_BAR_DURATION);
@@ -153,12 +151,12 @@ void Presenter::handleCancelButton()
 	m_token.setToken(Disabled);
 }
 
-void Presenter::incrementCounter()
+void Presenter::incrementCounter(int count)
 {
 	QImage img = m_view.getImage();
 	int size = img.width() * img.height();
-	m_counter++;
-	m_progress = std::round((float)m_counter / (float)size * 10000.0f);
+	m_counter += count;
+	m_progress = std::round((float)m_counter / (float)size * 1000.0f);
 	m_view.setProgressBar(m_progress);
 }
 

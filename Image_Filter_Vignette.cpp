@@ -10,13 +10,20 @@ void Image_Filter_Vignette::applyFilter(QImage& img)
 	img.convertTo(QImage::Format_RGBA8888);
 
 	uint32_t* data = reinterpret_cast<uint32_t*>(img.bits());
-	
+	int counter = 0;
+	int total = img.width() * img.height();
+	int threshold = total / 1000;
 #pragma omp parallel for
 	for (int64_t i = 0; i < size.width() * size.height(); i++)
 	{
 		if (!m_token->getToken())
 		{
 			break;
+		}
+		counter++;
+		if (counter % threshold == 0)
+		{
+			emit updatePercentage(threshold);
 		}
 		int x = i % size.width();
 		int y = i / size.width();

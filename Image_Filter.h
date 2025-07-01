@@ -9,7 +9,7 @@ class Image_Filter : public QObject
 	Q_OBJECT
 
 signals:
-	void updatePercentage();
+	void updatePercentage(int count);
 	void changeImage(QImage img);
 
 public:
