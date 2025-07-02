@@ -29,6 +29,8 @@ Presenter::Presenter(Image_Processing& v) : m_view(v)
 	//Connects the thread
 	connect(this, &Presenter::threadFinished, this, &Presenter::handleFinishedThread, Qt::QueuedConnection);
 	//connect(this, &Presenter::setProgressbarPercentage, this, &Presenter::setProgress, Qt::QueuedConnection);
+
+	loadImage(":/resources/Natur.jpg");
 }
 
 Presenter::~Presenter()
@@ -79,11 +81,7 @@ void Presenter::handleChooseFile()
 		//The workerThread starts to load the image
 		m_workerThread = std::make_unique<std::thread>([this, path]()
 			{
-				QImage image(path);
-				image.convertTo(QImage::Format_RGBA8888);
-				m_view.setImage(image);
-				m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
-				m_view.setImagePathLine(path);
+				loadImage(path);
 			});
 	}
 	else
@@ -163,4 +161,17 @@ void Presenter::incrementCounter(int count)
 void Presenter::updateImage(QImage img)
 {
 	m_view.setImage(img);
+}
+
+void Presenter::loadImage(QString path)
+{
+	QImage image(path);
+	image.convertTo(QImage::Format_RGBA8888);
+
+	QMetaObject::invokeMethod(&m_view, [this, image, path]()
+	{
+		m_view.setImage(image);
+		m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
+		m_view.setImagePathLine(path);
+	}, Qt::QueuedConnection);
 }

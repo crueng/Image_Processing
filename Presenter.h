@@ -1,13 +1,13 @@
 #pragma once
-#include "View.h"
-#include "Image_Model.h"
 #include "Filter_Factory.h"
 #include "Image_Filter.h"
+#include "Image_Model.h"
+#include "View.h"
 
-#include <QObject>
 #include <memory>
-#include <thread>
 #include <mutex>
+#include <QObject>
+#include <thread>
 
 class Presenter : public QObject
 {
@@ -41,6 +41,9 @@ public slots:
 
 	//updates the image
 	void updateImage(QImage img);
+
+private:
+	void loadImage(QString path);
 	
 private:
 	//Initializes the filters

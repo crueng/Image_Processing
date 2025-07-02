@@ -1,8 +1,6 @@
 *.tlog
 \x64
 \x64\Debug
-*.ui
-*.qrc
 *.log
 *.users
 *.user
