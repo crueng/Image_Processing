@@ -5,7 +5,7 @@
 
 void Image_Filter_BW::applyFilter(QImage& img)
 {
-	
+
 	int THREAD_QUANTITY = std::thread::hardware_concurrency();
 	img.detach();
 	std::vector<std::thread> activeThreads;
@@ -54,8 +54,8 @@ void Image_Filter_BW::runFilterInThread(QImage& img, int threadSize, int startPo
 		if (counter % threshold == 0)
 		{
 			emit updatePercentage(threshold);
+			emit changeImage(img);
 		}
-		//emit changeImage(img);
 		if (!m_token->getToken())
 		{
 			qDebug() << "thread done";

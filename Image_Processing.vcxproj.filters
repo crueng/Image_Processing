@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="VIew">
+      <UniqueIdentifier>{42150500-ab4f-4b88-89b6-fd8f9e164d97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Presenter">
+      <UniqueIdentifier>{5f734038-5cc6-4b12-aeb6-634676f53380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{750009e5-f5bb-458d-9ff4-49ec41a8c721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{4291bd38-1392-402f-9f77-d9b68f88feb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory\Filter">
+      <UniqueIdentifier>{a93ac86f-4fa4-4134-97fb-0dba8e55525c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{e8ca4c92-1188-417e-b2c8-e09177a37eb9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="View.cpp">
+      <Filter>VIew</Filter>
+    </ClCompile>
+    <ClCompile Include="Presenter.cpp">
+      <Filter>Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="Image_Filter.cpp">
+      <Filter>Factory\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="Image_Filter_Vignette.cpp">
+      <Filter>Factory\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter_Factory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Image_Filter_BW.cpp">
+      <Filter>Factory\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="Image_Filter_ColorCorrection.cpp">
+      <Filter>Factory\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="Image_Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadToken.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="View.h">
+      <Filter>VIew</Filter>
+    </QtMoc>
+    <QtMoc Include="Presenter.h">
+      <Filter>Presenter</Filter>
+    </QtMoc>
+    <QtMoc Include="Image_Filter.h">
+      <Filter>Factory\Filter</Filter>
+    </QtMoc>
+    <QtMoc Include="Image_Filter_Vignette.h">
+      <Filter>Factory\Filter</Filter>
+    </QtMoc>
+    <QtMoc Include="Image_Filter_BW.h">
+      <Filter>Factory\Filter</Filter>
+    </QtMoc>
+    <QtMoc Include="Image_Filter_ColorCorrection.h">
+      <Filter>Factory\Filter</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="Image_Processing.qrc">
+      <Filter>VIew</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="Image_Processing.ui">
+      <Filter>VIew</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Filter_Factory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Image_Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadToken.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

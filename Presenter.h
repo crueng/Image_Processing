@@ -7,6 +7,7 @@
 #include <QObject>
 #include <memory>
 #include <thread>
+#include <mutex>
 
 class Presenter : public QObject
 {
@@ -48,6 +49,7 @@ private:
 	Image_Processing& m_view;
 	Image_Model m_model;
 	std::unique_ptr<std::thread> m_workerThread;
+	std::mutex m_mtx;
 	ThreadToken m_token;
 	std::atomic<int> m_counter;
 	std::atomic<int> m_progress;
