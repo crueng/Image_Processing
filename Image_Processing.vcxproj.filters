@@ -27,6 +27,9 @@
     <Filter Include="Thread">
       <UniqueIdentifier>{e8ca4c92-1188-417e-b2c8-e09177a37eb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI_Image">
+      <UniqueIdentifier>{e04dca7f-caa2-496e-8cbd-359d6b980850}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +62,9 @@
     <ClCompile Include="ThreadToken.cpp">
       <Filter>Thread</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Image.cpp">
+      <Filter>UI_Image</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="View.h">
@@ -78,6 +84,9 @@
     </QtMoc>
     <QtMoc Include="Image_Filter_ColorCorrection.h">
       <Filter>Factory\Filter</Filter>
+    </QtMoc>
+    <QtMoc Include="UI_Image.h">
+      <Filter>UI_Image</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

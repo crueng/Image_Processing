@@ -6,7 +6,8 @@ Image_Processing::Image_Processing(QWidget* parent)
 {
 	m_ui.setupUi(this);
 	QPixmap px;
-	m_ui.Image_Label->setPixmap(px);
+	m_ui.Image->set(px.toImage());
+	
 	m_ui.Image_ProgressBar->setMinimum(0);
 	m_ui.Image_ProgressBar->setMaximum(1000);
 	hideProgressBar();
@@ -29,17 +30,17 @@ Image_Processing::~Image_Processing()
 void Image_Processing::setImage(QImage px)
 {
 	m_original = px;
-	m_ui.Image_Label->setPixmap(QPixmap::fromImage(px.scaled(m_ui.Image_Label->size(), Qt::KeepAspectRatio)));
+	m_ui.Image->set(px.scaled(m_ui.Image->size(), Qt::KeepAspectRatio));
 }
 
 const QSize Image_Processing::getLabelSize() const
 {
-	return m_ui.Image_Label->size();
+	return m_ui.Image->size();
 }
 
-QImage Image_Processing::getImage()
+QImage& Image_Processing::getImage()
 {
-	return m_original;
+	return m_ui.Image->get();
 }
 
 void Image_Processing::setStatusBar(const QString message, int duration)
@@ -91,4 +92,10 @@ void Image_Processing::disableCancelButton() const
 void Image_Processing::hideProgressBar()
 {
 	m_ui.Image_ProgressBar->hide();
+}
+
+void Image_Processing::updateImage()
+{
+	m_ui.Image->update();
+	//m_ui.Image->repaint();
 }

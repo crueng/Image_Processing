@@ -20,7 +20,7 @@ public:
 	const QSize getLabelSize() const;
 
 	//Returns the current Image
-	QImage getImage();
+	QImage& getImage();
 
 	//Sets the text and duration of the status bar
 	void setStatusBar(const QString message, int duration);
@@ -45,6 +45,8 @@ public:
 
 	//Hides the progressbar
 	void hideProgressBar();
+
+	void updateImage();
 	
 	signals:
 	void bwFilterEnabled();

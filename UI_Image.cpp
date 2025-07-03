@@ -1,7 +1,8 @@
 #include "UI_Image.h"
 void UI_Image::set(QImage img)
 {
-	m_img = img;
+	m_img = std::move(img);
+	update();
 }
 
 QImage& UI_Image::get()
@@ -11,7 +12,8 @@ QImage& UI_Image::get()
 
 void UI_Image::paintEvent(QPaintEvent* event)
 {
-	QWidget::paintEvent(event);
+	QPoint topLeft(0,0);
+	QRect rect(topLeft, m_img.size());
 	QPainter painter(this);
-	painter.drawRect(rect());
+	painter.drawImage(rect, m_img);
 }

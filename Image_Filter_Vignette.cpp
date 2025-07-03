@@ -1,5 +1,6 @@
 #include "Image_Filter_Vignette.h"
 #include <QtMath>
+#include <thread>
 
 void Image_Filter_Vignette::applyFilter(QImage& img)
 {

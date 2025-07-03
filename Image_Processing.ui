@@ -24,58 +24,17 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="10" column="2">
-     <widget class="QLineEdit" name="Image_Path_Line">
-      <property name="text">
-       <string>No Image Selected</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="dragEnabled">
-       <bool>false</bool>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="clearButtonEnabled">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2" rowspan="5">
-     <widget class="QFrame" name="frame">
+    <item row="3" column="1">
+     <widget class="QPushButton" name="Undo_Button">
       <property name="styleSheet">
-       <string notr="true">background-color:white</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" rowspan="6" colspan="2">
-     <widget class="QLabel" name="Image_Label">
-      <property name="minimumSize">
-       <size>
-        <width>1365</width>
-        <height>1173</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background:white</string>
+       <string notr="true">background-color:lightgrey</string>
       </property>
       <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <string>Undo</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
+    <item row="0" column="1">
      <widget class="QFrame" name="frame_2">
       <property name="minimumSize">
        <size>
@@ -94,17 +53,31 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="2">
-     <widget class="QPushButton" name="Undo_Button">
-      <property name="styleSheet">
-       <string notr="true">background-color:lightgrey</string>
+    <item row="0" column="0" rowspan="5">
+     <widget class="UI_Image" name="Image" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>1381</width>
+        <height>1151</height>
+       </size>
       </property>
-      <property name="text">
-       <string>Undo</string>
+      <layout class="QGridLayout" name="gridLayout_2"/>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QFrame" name="frame">
+      <property name="styleSheet">
+       <string notr="true">background-color:white</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
      </widget>
     </item>
-    <item row="6" column="2">
+    <item row="2" column="1">
      <widget class="QPushButton" name="Cancel_Button">
       <property name="styleSheet">
        <string notr="true">background-color: red</string>
@@ -114,7 +87,7 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="0" colspan="2">
+    <item row="5" column="0">
      <widget class="QProgressBar" name="Image_ProgressBar">
       <property name="value">
        <number>0</number>
@@ -123,6 +96,25 @@
        <set>Qt::AlignCenter</set>
       </property>
       <property name="textVisible">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="Image_Path_Line">
+      <property name="text">
+       <string>No Image Selected</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="dragEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="clearButtonEnabled">
        <bool>false</bool>
       </property>
      </widget>
@@ -186,6 +178,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>UI_Image</class>
+   <extends>QWidget</extends>
+   <header>ui_image.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="Image_Processing.qrc"/>
  </resources>

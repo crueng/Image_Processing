@@ -106,9 +106,9 @@ void Presenter::handleAction(QString name)
 		QMetaObject::invokeMethod(&m_view, "setProgressBar", Q_ARG(size_t, percent));
 	});*/
 
-	QImage img = m_view.getImage();
+	QImage& img = m_view.getImage();
 	m_model.addImage(img);
-	auto process = [this, name, action, img = std::move(img)]() mutable
+	auto process = [this, name, action, img = std::ref(img)]() mutable
 		{
 			action->setToken(m_token);
 			const auto startTime = std::chrono::high_resolution_clock::now();
@@ -156,6 +156,7 @@ void Presenter::incrementCounter(int count)
 	m_counter += count;
 	m_progress = std::round((float)m_counter / (float)size * 1000.0f);
 	m_view.setProgressBar(m_progress);
+	m_view.updateImage();
 }
 
 void Presenter::updateImage(QImage img)

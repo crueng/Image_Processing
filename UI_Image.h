@@ -6,6 +6,7 @@
 
 class UI_Image : public QWidget
 {
+	using QWidget::QWidget;
 	Q_OBJECT
 public:
 	void set(QImage img);
