@@ -12,8 +12,7 @@ QImage& UI_Image::get()
 
 void UI_Image::paintEvent(QPaintEvent* event)
 {
-	QPoint topLeft(0,0);
-	QRect rect(topLeft, m_img.size());
 	QPainter painter(this);
-	painter.drawImage(rect, m_img);
+	auto temp = m_img.scaled(contentsRect().size(), Qt::KeepAspectRatio);
+	painter.drawImage(QRect(QPoint(), temp.size()), temp);
 }

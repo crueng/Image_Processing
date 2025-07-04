@@ -1,4 +1,6 @@
 #pragma once
+#include "core_global.h"
+
 #include <atomic>
 
 enum
@@ -7,7 +9,7 @@ enum
 	Disabled = false
 };
 
-class ThreadToken
+class CORE_EXPORT ThreadToken
 {
 public:
 	//Constructs the token with default value true

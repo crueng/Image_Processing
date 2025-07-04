@@ -16,12 +16,6 @@ public:
 	//Sets the pixmap on the label
 	void setImage(QImage px);
 
-	//returns the labelSize
-	const QSize getLabelSize() const;
-
-	//Returns the current Image
-	QImage& getImage();
-
 	//Sets the text and duration of the status bar
 	void setStatusBar(const QString message, int duration);
 
@@ -30,6 +24,12 @@ public:
 
 	//Sets the progressBar
 	void setProgressBar(size_t value);
+	
+	//returns the labelSize
+	const QSize getLabelSize() const;
+
+	//Returns the current Image
+	QImage& getImage();
 
 	//Creates a new QAction
 	void createFilter(const QString filterName);

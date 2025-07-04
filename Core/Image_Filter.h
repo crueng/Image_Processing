@@ -1,10 +1,11 @@
 #pragma once
 #include "ThreadToken.h"
+#include "core_global.h"
 
 #include <QImage>
 #include <QObject>
 
-class Image_Filter : public QObject
+class CORE_EXPORT Image_Filter : public QObject
 {
 	Q_OBJECT
 

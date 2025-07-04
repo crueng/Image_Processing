@@ -1,5 +1,6 @@
 #pragma once
 #include "Image_Filter.h"
+#include "core_global.h"
 
 #include <map>
 #include <vector>
@@ -7,7 +8,7 @@
 #include <string>
 #include <QString>
 
-class Filter_Factory
+class CORE_EXPORT Filter_Factory
 {
 public:
 	static Filter_Factory& instance();

@@ -18,15 +18,6 @@
     <Filter Include="Model">
       <UniqueIdentifier>{750009e5-f5bb-458d-9ff4-49ec41a8c721}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Factory">
-      <UniqueIdentifier>{4291bd38-1392-402f-9f77-d9b68f88feb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Factory\Filter">
-      <UniqueIdentifier>{a93ac86f-4fa4-4134-97fb-0dba8e55525c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Thread">
-      <UniqueIdentifier>{e8ca4c92-1188-417e-b2c8-e09177a37eb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI_Image">
       <UniqueIdentifier>{e04dca7f-caa2-496e-8cbd-359d6b980850}</UniqueIdentifier>
     </Filter>
@@ -41,26 +32,8 @@
     <ClCompile Include="Presenter.cpp">
       <Filter>Presenter</Filter>
     </ClCompile>
-    <ClCompile Include="Image_Filter.cpp">
-      <Filter>Factory\Filter</Filter>
-    </ClCompile>
-    <ClCompile Include="Image_Filter_Vignette.cpp">
-      <Filter>Factory\Filter</Filter>
-    </ClCompile>
-    <ClCompile Include="Filter_Factory.cpp">
-      <Filter>Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="Image_Filter_BW.cpp">
-      <Filter>Factory\Filter</Filter>
-    </ClCompile>
-    <ClCompile Include="Image_Filter_ColorCorrection.cpp">
-      <Filter>Factory\Filter</Filter>
-    </ClCompile>
     <ClCompile Include="Image_Model.cpp">
       <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="ThreadToken.cpp">
-      <Filter>Thread</Filter>
     </ClCompile>
     <ClCompile Include="UI_Image.cpp">
       <Filter>UI_Image</Filter>
@@ -72,18 +45,6 @@
     </QtMoc>
     <QtMoc Include="Presenter.h">
       <Filter>Presenter</Filter>
-    </QtMoc>
-    <QtMoc Include="Image_Filter.h">
-      <Filter>Factory\Filter</Filter>
-    </QtMoc>
-    <QtMoc Include="Image_Filter_Vignette.h">
-      <Filter>Factory\Filter</Filter>
-    </QtMoc>
-    <QtMoc Include="Image_Filter_BW.h">
-      <Filter>Factory\Filter</Filter>
-    </QtMoc>
-    <QtMoc Include="Image_Filter_ColorCorrection.h">
-      <Filter>Factory\Filter</Filter>
     </QtMoc>
     <QtMoc Include="UI_Image.h">
       <Filter>UI_Image</Filter>
@@ -100,14 +61,8 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Filter_Factory.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
     <ClInclude Include="Image_Model.h">
       <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ThreadToken.h">
-      <Filter>Thread</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

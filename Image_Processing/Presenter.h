@@ -1,6 +1,6 @@
 #pragma once
-#include "Filter_Factory.h"
-#include "Image_Filter.h"
+#include "Core/Filter_Factory.h"
+#include "Core/Image_Filter.h"
 #include "Image_Model.h"
 #include "View.h"
 
