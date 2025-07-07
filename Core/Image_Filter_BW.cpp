@@ -23,7 +23,7 @@ void Image_Filter_BW::applyFilter(QImage& img)
 		}
 		std::thread t([this, &img, thisThreadSize, startPosition]()
 			{
-				qDebug() << "thread started";
+				//qDebug() << "thread started";
 				runFilterInThread(img, thisThreadSize, startPosition);
 			});
 		activeThreads.push_back(std::move(t));

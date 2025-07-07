@@ -3,6 +3,7 @@
 #include "Core/Image_Filter_ColorCorrection.h"
 #include "Core/Image_Filter_Vignette.h"
 
+#include <QtMath>
 namespace
 {
 	int rgbClamp(int rgb)
@@ -16,6 +17,28 @@ namespace
 			return 0;
 		}
 		return rgb;
+	}
+
+	int grayScaleClamp(int grayScale)
+	{
+		if (grayScale > 100)
+		{
+			return 100;
+		}
+		if (grayScale < 0)
+		{
+			return 0;
+		}
+		return grayScale;
+	}
+
+	int getDistance(QPoint pointA, QPoint pointB)
+	{
+		const int a = qAbs(pointA.x() - pointB.x());
+		const int b = qAbs(pointA.y() - pointB.y());
+		const int cSquare = (qPow(a, 2)) + (qPow(b, 2));
+		const int c = (qSqrt(cSquare));
+		return c;
 	}
 }
 
@@ -108,5 +131,35 @@ TEST_SUITE("Filter Tests")
 		filter->setToken(token);
 		QSize imageSize(100, 100);
 		QImage img(imageSize, QImage::Format_RGBA8888);
+		img.fill(Qt::white);
+		QImage compareImage = img;
+		filter->applyFilter(compareImage);
+
+		const QPoint center(img.width() / 2, img.height() / 2);
+		uint32_t* data = reinterpret_cast<uint32_t*>(img.bits());
+
+		for (int64_t i = 0; i < img.width() * img.height(); i++)
+		{
+			int x = i % img.width();
+			int y = i / img.width();
+
+			uint32_t pixelValue = data[i];
+			int alpha = (pixelValue >> 24) & 0xFF;
+			int blue = (pixelValue >> 16) & 0xFF;
+			int green = (pixelValue >> 8) & 0xFF;
+			int red = (pixelValue >> 0) & 0xFF;
+			QColor color(red, green, blue, alpha);
+
+			QPoint point(x, y);
+
+			int distance = getDistance(center, point);
+			int grayScale = ((double)distance / (img.width() / 2)) * 100;
+			grayScale = grayScaleClamp(grayScale);
+
+			QColor newColor(rgbClamp(color.red() * std::abs(grayScale - 100) / 100),
+				rgbClamp(color.green() * std::abs(grayScale - 100) / 100),
+				rgbClamp(color.blue() * std::abs(grayScale - 100) / 100));
+			CHECK(compareImage.pixelColor(x, y) == newColor);
+		}
 	}
 }

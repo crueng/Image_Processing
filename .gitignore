@@ -4,3 +4,9 @@
 *.log
 *.users
 *.user
+*.VC*
+*.db
+*.suo
+*.json
+*.vsidx
+*.ipch
