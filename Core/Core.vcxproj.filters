@@ -21,6 +21,9 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="PluginLoader">
+      <UniqueIdentifier>{7fc5af46-6e88-4d90-a3f8-1caf03695c06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core_global.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="Filter_Factory.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginLoader.h">
+      <Filter>PluginLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +63,9 @@
     </ClCompile>
     <ClCompile Include="Filter_Factory.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginLoader.cpp">
+      <Filter>PluginLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

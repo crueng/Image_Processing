@@ -43,9 +43,12 @@ public slots:
 	void updateImage(QImage img);
 
 private:
+	//Loads the image and also sets it in the view
 	void loadImage(QString path);
-	
-private:
+
+	//loads all the plugin filter
+	void loadExternFilter();
+
 	//Initializes the filters
 	void loadFilter();
 	

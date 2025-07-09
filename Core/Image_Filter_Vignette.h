@@ -22,4 +22,3 @@ public:
 private:
 	ThreadToken* m_token;
 };
-

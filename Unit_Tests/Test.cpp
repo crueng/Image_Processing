@@ -4,6 +4,9 @@
 #include "Core/Image_Filter_Vignette.h"
 
 #include <QtMath>
+#include <chrono>
+#include <QDebug>
+
 namespace
 {
 	int rgbClamp(int rgb)
@@ -126,6 +129,7 @@ TEST_SUITE("Filter Tests")
 
 	TEST_CASE("Filter_Vignette")
 	{
+		auto start = std::chrono::high_resolution_clock::now();
 		auto filter = Filter_Factory::instance().createFilter("Vignette");
 		ThreadToken token;
 		filter->setToken(token);
@@ -161,5 +165,8 @@ TEST_SUITE("Filter Tests")
 				rgbClamp(color.blue() * std::abs(grayScale - 100) / 100));
 			CHECK(compareImage.pixelColor(x, y) == newColor);
 		}
+		auto stop = std::chrono::high_resolution_clock::now();
+		auto result = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
+		qDebug() << "Time in ms: " << result;
 	}
 }

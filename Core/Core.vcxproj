@@ -66,11 +66,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -109,9 +111,11 @@
     <ClCompile Include="Image_Filter_BW.cpp" />
     <ClCompile Include="Image_Filter_ColorCorrection.cpp" />
     <ClCompile Include="Image_Filter_Vignette.cpp" />
+    <ClCompile Include="PluginLoader.cpp" />
     <ClCompile Include="ThreadToken.cpp" />
     <ClInclude Include="core_global.h" />
     <ClInclude Include="Filter_Factory.h" />
+    <ClInclude Include="PluginLoader.h" />
     <ClInclude Include="ThreadToken.h" />
     <QtMoc Include="Image_Filter_Vignette.h" />
     <QtMoc Include="Image_Filter_ColorCorrection.h" />
