@@ -4,6 +4,8 @@
 #include <QSize>
 #include <QImage>
 
+REGISTER_FILTER(Image_Filter_ColorCorrection, "Color Correction")
+
 void Image_Filter_ColorCorrection::applyFilter(QImage& img)
 {
 	img.detach();
@@ -82,25 +84,4 @@ const int Image_Filter_ColorCorrection::clamp(const int value)
 		return 255;
 	}
 	return value;
-}
-
-namespace
-{
-	class Starter
-	{
-	public:
-		Starter()
-		{
-			Filter_Factory::instance().m_vec.push_back([]()
-				{
-					return std::make_unique<Image_Filter_ColorCorrection>();
-				});
-
-			Filter_Factory::instance().m_type["Color Correction"] = Filter_Factory::instance().m_vec.size() - 1;
-		}
-
-		~Starter() = default;
-	};
-
-	Starter RegisterColorCorrection;
 }

@@ -2,6 +2,8 @@
 #include <QtMath>
 #include <thread>
 
+REGISTER_FILTER(Image_Filter_Vignette, "Vignette")
+
 void Image_Filter_Vignette::applyFilter(QImage& img)
 {
 	const QSize size = img.size();
@@ -91,24 +93,4 @@ int Image_Filter_Vignette::getDistance(QPoint pointA, QPoint pointB)
 	const int cSquare = (qPow(a, 2)) + (qPow(b, 2));
 	const int c = (qSqrt(cSquare));
 	return c;
-}
-
-namespace
-{
-	class Starter
-	{
-	public:
-		Starter()
-		{
-			Filter_Factory::instance().m_vec.push_back([]()
-				{
-					return std::make_unique<Image_Filter_Vignette>();
-				});
-			Filter_Factory::instance().m_type["Vignette"] = Filter_Factory::instance().m_vec.size() - 1;
-		}
-
-		~Starter() = default;
-	};
-
-	Starter RegisterVignetteFilter;
 }

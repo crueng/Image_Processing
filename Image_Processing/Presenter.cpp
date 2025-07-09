@@ -19,8 +19,8 @@ Q_DECLARE_METATYPE(size_t);
 Presenter::Presenter(Image_Processing& v) : m_view(v)
 {
 	qRegisterMetaType<size_t>("size_t");
-	loadExternFilter();
-	//loadFilter();
+	PluginLoader::loadPlugins();
+	loadFilter();
 	//Connects the presenter with the view
 	connect(&m_view, &Image_Processing::actionTriggered, this, &Presenter::handleAction);
 	connect(&m_view, &Image_Processing::undoButtonpressed, this, &Presenter::handleUndoButton);
@@ -176,15 +176,4 @@ void Presenter::loadImage(QString path)
 		m_view.setStatusBar("File loaded", STATUS_BAR_DURATION);
 		m_view.setImagePathLine(path);
 	}, Qt::QueuedConnection);
-}
-
-void Presenter::loadExternFilter()
-{
-	PluginLoader loader;
-	loader.loadPlugins();
-	for (auto filter : loader.getExternFilter())
-	{
-		m_model.addFilter(filter);
-		m_view.createFilter(filter.c_str());
-	}
 }

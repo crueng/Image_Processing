@@ -3,6 +3,8 @@
 #include <thread>
 #include <QDebug>
 
+REGISTER_FILTER(Image_Filter_BW, "Black White");
+
 void Image_Filter_BW::applyFilter(QImage& img)
 {
 
@@ -84,25 +86,4 @@ void Image_Filter_BW::runFilterInThread(QImage& img, int threadSize, int startPo
 		newPixelValue = newPixelValue | (newColor.red() & 0xFF);
 		data[i] = newPixelValue;
 	}
-}
-
-namespace
-{
-	class Starter
-	{
-	public:
-		Starter()
-		{
-			Filter_Factory::instance().m_vec.push_back([]()
-				{
-					return std::make_unique<Image_Filter_BW>();
-				});
-
-			Filter_Factory::instance().m_type["Black White"] = Filter_Factory::instance().m_vec.size() - 1;
-		}
-
-		~Starter() = default;
-	};
-
-	Starter RegisterBWFilter;
 }

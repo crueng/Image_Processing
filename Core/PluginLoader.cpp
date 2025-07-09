@@ -18,22 +18,6 @@ void PluginLoader::loadPlugins()
 		if (!lib.load())
 		{
 			__debugbreak();
-			return;
 		}
-		filter f = (filter)lib.resolve("getFactory");
-		if (f)
-		{
-			for (auto& [filter, index] : f().m_type)
-			{
-				m_pluginFilter.push_back(filter);
-			}
-			return;
-		}
-		__debugbreak();
 	}
-}
-
-std::vector<std::string> PluginLoader::getExternFilter()
-{
-	return m_pluginFilter;
 }

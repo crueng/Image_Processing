@@ -46,9 +46,6 @@ private:
 	//Loads the image and also sets it in the view
 	void loadImage(QString path);
 
-	//loads all the plugin filter
-	void loadExternFilter();
-
 	//Initializes the filters
 	void loadFilter();
 	
